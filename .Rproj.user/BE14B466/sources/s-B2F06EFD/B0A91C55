@@ -1,0 +1,27 @@
+{
+    "id": "B0A91C55",
+    "path": "C:/Users/evanmuis/Desktop/ntems_cliping_terra/scripts/generate_process_df.R",
+    "project_path": "scripts/generate_process_df.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1645643254989.0,
+    "source_on_save": false,
+    "relative_order": 5,
+    "properties": {
+        "tempName": "Untitled1",
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "52,90",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1655229815,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1655229815483,
+    "read_only": false,
+    "read_only_alternatives": []
+}

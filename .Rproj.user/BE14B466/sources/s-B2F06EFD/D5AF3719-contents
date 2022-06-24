@@ -1,0 +1,21 @@
+source(here::here("scripts", "mosaic_masks.R"))
+
+utmzone_all <- st_intersection(aoi %>% st_transform(3347), nom_cad %>% st_make_valid()) %>%
+  pull(crs) %>%
+  unique() # solves multipart polygon issues
+  
+print(paste0("AOI is located in ", length(utmzone_all), " UTM zones: "))
+print(utmzone_all)
+print("Note that letters N or S correspond to the internal NTEMS data division, not northern or southern hemishphere")
+
+if(length(utmzone_all > 1)) {
+  out_crs = crs(rast(template))
+}
+
+# add the m in front so it only detects those it should
+# without it, 9S would also detect 19S
+utm_masks <- str_subset(masks_files, paste(paste0("M", utmzone_all), collapse = "|"))
+
+utm_masks <- map(utm_masks, rast)
+
+names(utm_masks) <- utmzone_all

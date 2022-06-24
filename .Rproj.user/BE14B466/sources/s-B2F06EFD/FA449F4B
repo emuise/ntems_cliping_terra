@@ -1,0 +1,27 @@
+{
+    "id": "FA449F4B",
+    "path": "C:/Users/evanmuis/Desktop/ntems_cliping_terra/scripts/get_data_type.R",
+    "project_path": "scripts/get_data_type.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1652720058167.0,
+    "source_on_save": false,
+    "relative_order": 7,
+    "properties": {
+        "tempName": "Untitled1",
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "5,2",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1652722411,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1652722411441,
+    "read_only": false,
+    "read_only_alternatives": []
+}
