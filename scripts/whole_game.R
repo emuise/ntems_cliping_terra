@@ -4,8 +4,10 @@ library("terra")
 library("sf")
 
 # temp file locations
+terra_temp <- "D:\\temp" # save in variable because used in ntems_mosaic_gdal()
+
 terraOptions(memfrac = 0.75,
-             tempdir = "D:\\temp",
+             tempdir = terra_temp,
              todisk = T,
              progress = 100)
 
@@ -75,7 +77,7 @@ to_process <- crossing(year = years, zone = utmzone_all, var = vars)
 
 source(here::here("scripts", "generate_process_df.R"))
 
-#map2(process_df$path_in, process_df$path_out, ntems_crop)
+map2(process_df$path_in, process_df$path_out, ntems_crop)
 
 if (length(utm_masks) >= 2) {
   # this is just annoying regex to clean up the mosaic output names so we can then
@@ -95,10 +97,10 @@ if (length(utm_masks) >= 2) {
     group_split(mosaic_path)
   
   source(here::here("scripts", "ntems_mosaic.R"))
-  
-  tibble <- mosaic_dfs[[1]]
+  #source(here::here("scripts", "scripts/ntems_mosaic_gdal.R"))
   
   map(mosaic_dfs, ntems_mosaicer)
+  #map(mosaic_dfs, ntems_mosaicer_gdal)
   
 }
 
