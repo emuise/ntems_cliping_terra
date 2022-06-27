@@ -38,17 +38,42 @@ ntems_mosaicer <- function(tibble) {
     map(rast)
   
   print("Mosaicing")
-  mosaiced <- map(rasts, project, y = template, 
+  
+  # Project rasts to template
+  rasts_proj <- map(rasts, project, y = template, 
                   align = T, method = "near")
-  two <- mosaiced %>%
-    map2(.x = ., .y = utm_masks, .f = mask) #%>%
+  
+  # utm_masks need to align with the rasts_proj grids and have the same extent before merging
+  # Need to project + crop 
+  # Here, I crop first to work on the AOI extent, project (faster than projecting for all mask) and finally crop again to rast_proj ()
+  
+  if(!all(file.exists(here::here(outpath, "mosaiced", "UTM_mask", tibble$zone,"UTM_mask_LCC.dat")))) {
+    utm_masks_crop <- map2(.x = utm_masks, .y = rasts_proj, .f = crop, snap = "out")
+    
+    utm_masks_proj <- map2(.x = utm_masks_crop, .y = rasts_proj, project,
+                           align = TRUE, method = "near") %>%
+      map2(.x = ., .y = rasts_proj, .f = crop)
+    
+    # Store ouput of dir.creat to avoid printing in the console
+    new_dir <- map(here::here(outpath, "mosaiced", "UTM_mask", tibble$zone), dir.create, showWarnings = F, recursive = T)
+    
+    utm_masks_proj <- map2(.x = utm_masks_proj, .y = here::here(outpath, "mosaiced", "UTM_mask", tibble$zone,"UTM_mask_LCC.dat"), 
+                           .f = writeRaster, 
+                           datatype = "INT1U",
+                           filetype = "ENVI",
+                           overwrite = T,
+                           todisk = T,
+                           memfrac = 0.75)
+    
+  }else{
+    utm_masks_proj <- map(here::here(outpath, "mosaiced", "UTM_mask", tibble$zone, "UTM_mask_LCC.dat"), 
+                          rast)
+  }
+  
+  mosaiced <- rasts_proj %>%
+    map2(.x = ., .y = utm_masks, .f = mask, maskvalues = 0) %>%
     sprc() %>%
     merge()
-  
-  # mosaiced <- map2(rasts, utm_masks, mask) %>%
-  #   map(project, y = template, align = T, method = "near") %>%
-  #   sprc() %>%
-  #   merge()
   
   print("Mosaiced")
     
@@ -72,6 +97,4 @@ ntems_mosaicer <- function(tibble) {
   print(" ")
   terra::tmpFiles(remove = T)
 }
-
-ntems_mosaicer(tibble)
 
