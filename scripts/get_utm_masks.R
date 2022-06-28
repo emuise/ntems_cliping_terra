@@ -3,6 +3,12 @@ source(here::here("scripts", "mosaic_masks.R"))
 utmzone_all <- st_intersection(aoi %>% st_transform(3347), nom_cad %>% st_make_valid()) %>%
   pull(crs) %>%
   unique() # solves multipart polygon issues
+
+valid_zones <- list.files("M:\\VLCE2.0_1984-2021") %>%
+  str_split("_") %>%
+  sapply("[", 2)
+
+utmzone_all[utmzone_all %in% valid_zones]
   
 print(paste0("AOI is located in ", length(utmzone_all), " UTM zones: "))
 print(utmzone_all)

@@ -6,6 +6,13 @@ masks_files <- list.files(masks_path)
 masks_files <- masks_files[endsWith(masks_files, ".dat")] %>%
   here::here(masks_path, .)
 
+shp_path <- "\\\\FRst-frm-2232b\\G$\\non_overlapping_polygon"
+
+shp_files <- list.files(shp_path)
+
+shp_files <- shp_files[endsWith(shp_files, ".shp")] %>%
+  here::here(shp_path, .)
+
 # get only shapefiles to iterate over
 if (!file.exists("C:/Users/evanmuis/Desktop/ntems_cliping_terra/shapefiles/non_overlapping_masks_canada.shp")) {
 
@@ -22,14 +29,12 @@ if (!file.exists("C:/Users/evanmuis/Desktop/ntems_cliping_terra/shapefiles/non_o
       mutate(crs = zone)
   } 
   
-  map(masks_files, read_add_crs) %>%
+  map(shp_files, read_add_crs) %>%
     map(st_transform, crs = 3347) %>%
     bind_rows() %>%
     st_write(here::here("shapefiles", "non_overlapping_masks_canada.shp"), append = F)
   rm(read_add_crs)
   
 }
-
-
 
 nom_cad <- read_sf(here::here("shapefiles", "non_overlapping_masks_canada.shp"))

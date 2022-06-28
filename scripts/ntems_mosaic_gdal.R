@@ -83,7 +83,7 @@ ntems_mosaicer_gdal <- function(tibble) {
        overwrite = TRUE)
   
   # Load projected rasters as SpatRaster
-  rasts_proj<- map(tmp_files, rast)
+  rasts_proj <- map(tmp_files, rast)
   
   # utm_masks need to align with the rasts_proj grids and have the same extent before merging
   # Need to project + crop 

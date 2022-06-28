@@ -1,4 +1,0 @@
-herer <- "C:\\Users\\evanmuis\\Downloads\\CA_forest_VLCE_2015.zip"
-to <- "D:/Bud/template_raster"
-
-unzip(herer, exdir = to)

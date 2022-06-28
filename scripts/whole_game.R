@@ -12,7 +12,7 @@ terraOptions(memfrac = 0.75,
              progress = 100)
 
 #### user inputs ####
-aoi_path <- "Z:\\ByUser\\Muise\\for_martin\\ON_NW_Boreal.shp"
+aoi_path <- "Z:\\ByUser\\Muise\\hana\\FTE_Extent_1.shp"
 
 outpath <- dirname(aoi_path) %>%
   here::here(tools::file_path_sans_ext(basename(aoi_path)))
@@ -20,13 +20,13 @@ outpath <- dirname(aoi_path) %>%
 # if you want a custom outpath, comment out if you want in the same folder
 #outpath <- "D:\\Bud\\bap_alex"
 
-years <- c(1984:2021)
-#years <- 2015
+#years <- c(1984:2021)
+years <- 2021
 
 # what to process?
 vars <- tibble(VLCE = T,  #note - VLCE is always required when processing structure layers
                
-               proxies = T,
+               proxies = F,
                
                change_attribution = T,
                change_metrics = T,
@@ -39,7 +39,7 @@ vars <- tibble(VLCE = T,  #note - VLCE is always required when processing struct
                structure_basal_area = F,
                structure_elev_cv = F,
                structure_elev_mean = F,
-               structure_elev_p95 = T,
+               structure_elev_p95 = F,
                structure_elev_stddev = F,
                structure_gross_stem_volume = F,
                structure_loreys_height = F,
@@ -96,10 +96,10 @@ if (length(utm_masks) >= 2) {
            ) %>%
     group_split(mosaic_path)
   
-  source(here::here("scripts", "ntems_mosaic.R"))
+  source(here::here("scripts", "ntems_mosaic_gdal.R"))
   #source(here::here("scripts", "scripts/ntems_mosaic_gdal.R"))
   
-  map(mosaic_dfs, ntems_mosaicer)
+  map(mosaic_dfs, ntems_mosaicer_gdal)
   #map(mosaic_dfs, ntems_mosaicer_gdal)
   
 }
