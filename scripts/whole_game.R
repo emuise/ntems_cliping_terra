@@ -4,21 +4,21 @@ library("terra")
 library("sf")
 
 # temp file locations
-terra_temp <- "D:\\temp" # save in variable because used in ntems_mosaic_gdal()
+terra_temp <- "D:\\Temp2" # save in variable because used in ntems_mosaic_gdal()
 
 terraOptions(memfrac = 0.75,
              tempdir = terra_temp,
-             todisk = T,
+             todisk = F,
              progress = 100)
 
 #### user inputs ####
-aoi_path <- "Z:\\ByUser\\Muise\\hana\\FTE_Extent_1.shp"
+aoi_path <- "Z:\\ByUser\\Muise\\chris\\clip.shp"
 
 outpath <- dirname(aoi_path) %>%
   here::here(tools::file_path_sans_ext(basename(aoi_path)))
 
 # if you want a custom outpath, comment out if you want in the same folder
-#outpath <- "D:\\Bud\\bap_alex"
+#outpath <- "D:\\Bud\\hana"
 
 #years <- c(1984:2021)
 years <- 2021
@@ -29,12 +29,14 @@ vars <- tibble(VLCE = T,  #note - VLCE is always required when processing struct
                proxies = F,
                
                change_attribution = T,
-               change_metrics = T,
+               change_metrics = F,
                
                topography = F,
                
                lat = F,
                lon = F,
+               
+               climate = F,
                
                structure_basal_area = F,
                structure_elev_cv = F,
@@ -52,19 +54,12 @@ vars <- tibble(VLCE = T,  #note - VLCE is always required when processing struct
 
 # a template raster to project to. currently, if the region is >1 UTM zone, defaults to LCC
 template <- rast("D:\\Bud\\template_raster\\CA_forest_VLCE_2015.tif")
+#template <- rast("Z:\\ByUser\\Muise\\bc-vlce-2015.tif")
 
 #### end user inputs ####
 
 # processing from here on, user not to adjust unless they are confident in what they are doing
 aoi <- read_sf(aoi_path) 
-
-
-# for alex processing
-#aoi <- aoi %>% st_simplify(dTolerance = 10000)
-
-# this is to reduce time for large multi feature polygons with many vertices
-# some information is lost, but we generally dont care about it
-#aoi <- aoi %>% group_split(PRNAME) %>% map(st_bbox) %>% map(st_as_sfc) %>% map(st_as_sf) %>% bind_rows() %>% st_make_valid() %>% st_buffer(0)
 
 # if single zone, out crs should be that utm zone
 out_crs <- st_crs(aoi)
@@ -96,10 +91,10 @@ if (length(utm_masks) >= 2) {
            ) %>%
     group_split(mosaic_path)
   
-  source(here::here("scripts", "ntems_mosaic_gdal.R"))
+  source(here::here("scripts", "ntems_mosaic.R"))
   #source(here::here("scripts", "scripts/ntems_mosaic_gdal.R"))
   
-  map(mosaic_dfs, ntems_mosaicer_gdal)
+  map(mosaic_dfs, ntems_mosaicer)
   #map(mosaic_dfs, ntems_mosaicer_gdal)
   
 }

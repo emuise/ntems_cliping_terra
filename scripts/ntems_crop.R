@@ -2,6 +2,7 @@
 # can be used with map2 to functionally program
 
 ntems_crop <- function(path_in, path_out) {
+  crop_start <- Sys.time()
   print(paste("Processing input file of:", path_in))
   
   if (!dir.exists(dirname(path_out))) {
@@ -22,7 +23,7 @@ ntems_crop <- function(path_in, path_out) {
     structure_info <- tools::file_path_sans_ext(basename(path_in))
     
     year <- str_extract(structure_info, "[0-9]{4}")
-    zone <- str_extract(structure_info, "[0-9]{2}[a-zA-Z]{1}")
+    zone <- str_extract(structure_info, "[0-9]{1,2}[a-zA-Z]{1}")
     
     vlce_mask <- here::here(outpath, zone, "VLCE", paste0("LC_Class_HMM_", zone, "_", year, "_v20_v20.dat"))
     
@@ -37,6 +38,7 @@ ntems_crop <- function(path_in, path_out) {
               datatype = get_data_type(path_in),
               filetype = "ENVI",
               overwrite = T)
+  print(Sys.time() - crop_start)
   
 }
 

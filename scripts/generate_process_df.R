@@ -1,7 +1,7 @@
 vlce_df <- to_process %>%
   filter(var == "VLCE") %>%
   mutate(path_in = here::here("M:/", "VLCE2.0_1984-2021", paste0("UTM_", zone), paste0("LC_Class_HMM_", zone, "_", year, "_v20_v20.dat")),
-         path_out = here::here(outpath, zone, var, paste0("LC_Class_HMM_", zone, "_", year, "_v20_v20.dat")))
+         path_out = here::here(outpath, zone, paste0(var, "2.0"), paste0("LC_Class_HMM_", zone, "_", year, "_v20_v20.dat")))
 
 attribution_df <- to_process %>%
   filter(var == "change_attribution") %>%
@@ -19,8 +19,15 @@ metrics_df <- to_process %>%
   unnest(path_out) %>%
   filter(str_detect(path_out, ".dat")) %>%
   mutate(path_out = here::here(outpath, zone, var, path_out)) %>%
-  filter(str_detect(path_in, paste0("M", zone))) %>%
+  filter(str_detect(path_in, paste0("_", zone))) %>%
   distinct(path_in, .keep_all = T)
+
+change_annual_df <- to_process %>%
+  filter(var == "change_annual") %>%
+  filter(year > 1985 & year < 2021) %>%
+  mutate(path_in = here::here("N:/", paste0("UTM_", zone), "Results", "Change_attribution", "change_attributed_annually", paste0("SRef_UTM", zone, "_multiyear_attribution_", year, ".dat")),
+         path_out = here::here(outpath, zone, var, paste0("SRef_UTM", zone, "_", year, "_change_annual.dat")))
+        
 
 proxies_df <- to_process %>% 
   filter(var == "proxies") %>%
@@ -51,15 +58,25 @@ latlon_df <- to_process %>%
   distinct(var, zone) %>%
   mutate(path_in = here::here("G:/", "ntems_lat-lon", var, paste0("UTM", zone, "_", var, ".dat")),
          path_out = here::here(outpath, zone, var, paste0("UTM", zone, "_", var, ".dat")))
+
+climate_df <- to_process %>%
+  filter(var == "climate") %>%
+  distinct(climate = var, zone) %>%
+  crossing(var = c("avgmaxt", "avgmint", "pcp")) %>%
+  select(!climate) %>%
+  mutate(path_in = here::here("G:/", "climate_layers_1km_corrected_spline", var, paste0("UTM", zone, "_", var, ".dat")),
+         path_out = here::here(outpath, zone, var, paste0("UTM", zone, "_", var, ".dat")))
          
 
 process_df <- bind_rows(vlce_df,
                         proxies_df,
                         attribution_df,
                         metrics_df,
+                        change_annual_df,
                         topo_df,
                         structure_df,
-                        latlon_df)
+                        latlon_df,
+                        climate_df)
 
 rm(vlce_df, 
    proxies_df,

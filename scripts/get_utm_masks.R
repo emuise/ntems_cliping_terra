@@ -8,7 +8,7 @@ valid_zones <- list.files("M:\\VLCE2.0_1984-2021") %>%
   str_split("_") %>%
   sapply("[", 2)
 
-utmzone_all[utmzone_all %in% valid_zones]
+utmzone_all <- utmzone_all[utmzone_all %in% valid_zones]
   
 print(paste0("AOI is located in ", length(utmzone_all), " UTM zones: "))
 print(utmzone_all)
@@ -20,8 +20,7 @@ if(length(utmzone_all > 1)) {
 
 # add the m in front so it only detects those it should
 # without it, 9S would also detect 19S
-utm_masks <- str_subset(masks_files, paste(paste0("M", utmzone_all), collapse = "|"))
-
-utm_masks <- map(utm_masks, rast)
+utm_masks <- str_subset(mask_save_names, paste(paste0("M", utmzone_all), collapse = "|")) %>%
+  map(vect)
 
 names(utm_masks) <- utmzone_all
