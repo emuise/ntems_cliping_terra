@@ -1,6 +1,6 @@
 source(here::here("scripts", "mosaic_masks.R"))
 
-utmzone_all <- st_intersection(aoi %>% st_transform(3347), nom_cad %>% st_make_valid()) %>%
+utmzone_all <- st_intersection(aoi %>% st_transform(3347) %>% st_make_valid, nom_cad %>% st_make_valid()) %>%
   pull(crs) %>%
   unique() # solves multipart polygon issues
 

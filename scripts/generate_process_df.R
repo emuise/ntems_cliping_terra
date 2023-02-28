@@ -24,7 +24,7 @@ metrics_df <- to_process %>%
 
 change_annual_df <- to_process %>%
   filter(var == "change_annual") %>%
-  filter(year > 1985 & year < 2021) %>%
+  filter(year > 1984 & year < 2021) %>%
   mutate(path_in = here::here("N:/", paste0("UTM_", zone), "Results", "Change_attribution", "change_attributed_annually", paste0("SRef_UTM", zone, "_multiyear_attribution_", year, ".dat")),
          path_out = here::here(outpath, zone, var, paste0("SRef_UTM", zone, "_", year, "_change_annual.dat")))
         
@@ -66,6 +66,12 @@ climate_df <- to_process %>%
   select(!climate) %>%
   mutate(path_in = here::here("G:/", "climate_layers_1km_corrected_spline", var, paste0("UTM", zone, "_", var, ".dat")),
          path_out = here::here(outpath, zone, var, paste0("UTM", zone, "_", var, ".dat")))
+
+species_df <- to_process %>%
+  filter(var == "species") %>%
+  distinct(var, zone) %>%
+  mutate(path_in = here::here("M:/", "Species_2019_from_c2c_1984-2021", paste0("Species_classification_", zone, "_2019_1_leading.dat")),
+         path_out = here::here(outpath, zone, var, paste0("leading-species_2019_", zone, ".dat")))
          
 
 process_df <- bind_rows(vlce_df,
@@ -76,11 +82,16 @@ process_df <- bind_rows(vlce_df,
                         topo_df,
                         structure_df,
                         latlon_df,
-                        climate_df)
+                        climate_df,
+                        species_df)
 
-rm(vlce_df, 
+rm(vlce_df,
    proxies_df,
    attribution_df,
    metrics_df,
+   change_annual_df,
    topo_df,
-   structure_df)
+   structure_df,
+   latlon_df,
+   climate_df,
+   species_df)

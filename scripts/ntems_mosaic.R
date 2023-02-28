@@ -16,6 +16,7 @@ ntems_mosaicer <- function(tibble) {
     pull(mosaic_path) %>%
     unique()
   
+  message()
   print("mosaicing ------------------")
   print(paste("zones:", toString(utmzone_all)))
   print(paste("year:", year))
@@ -83,7 +84,7 @@ ntems_mosaicer <- function(tibble) {
               memfrac = 0.75)
   
   print("----------------------------")
-  print(" ")
+
   terra::tmpFiles(remove = T)
   
   print(Sys.time() - mosaic_start)

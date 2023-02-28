@@ -12,10 +12,11 @@ ntems_crop <- function(path_in, path_out) {
   my_rast <- rast(path_in)
 
   my_aoi <- vect(aoi) %>% 
-    project(my_rast) %>%
-    ext()
+    project(my_rast) #%>%
+    # ext()
   
-  save_rast <- crop(my_rast, my_aoi)
+  save_rast <- crop(my_rast, my_aoi) %>%
+    mask(my_aoi)
   
   if(str_detect(path_in, "structure")) {
     print("structure raster, masking based on the VLCE raster")
@@ -25,7 +26,7 @@ ntems_crop <- function(path_in, path_out) {
     year <- str_extract(structure_info, "[0-9]{4}")
     zone <- str_extract(structure_info, "[0-9]{1,2}[a-zA-Z]{1}")
     
-    vlce_mask <- here::here(outpath, zone, "VLCE", paste0("LC_Class_HMM_", zone, "_", year, "_v20_v20.dat"))
+    vlce_mask <- here::here(outpath, zone, "VLCE2.0", paste0("LC_Class_HMM_", zone, "_", year, "_v20_v20.dat"))
     
     vlce_mask <- rast(vlce_mask)
     vlce_mask <- vlce_mask %in% c(81, 210, 220, 230)
