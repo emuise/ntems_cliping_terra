@@ -15,7 +15,7 @@ terraOptions(
 )
 
 #### user inputs ####
-aoi_path <- "Z:\\ByUser\\Muise/catherine_2014/extent_BAP/extent.shp"
+aoi_path <- "Z:\\ByProject\\Silv21\\Shapefiles\\Quesnel.shp"
 
 outpath <- dirname(aoi_path) %>%
   here::here(tools::file_path_sans_ext(basename(aoi_path)))
@@ -24,12 +24,12 @@ outpath <- dirname(aoi_path) %>%
 #outpath <- "D:\\Bud\\bc\\"
 
 years <- c(1984:2021)
-years <- 2014
+#years <- 2014
 
 # what to process?
 vars <-
   tibble(
-    VLCE = T,
+    VLCE = F,
     # note - VLCE is always required when processing structure layers
     
     proxies = F,
@@ -40,6 +40,8 @@ vars <-
     
     species = F,
     
+    age = F,
+    
     topography = F,
     
     lat = F,
@@ -47,16 +49,16 @@ vars <-
     
     climate = F,
     
-    structure_basal_area = T,
-    structure_elev_cv = T,
-    structure_elev_mean = T,
-    structure_elev_p95 = T,
-    structure_elev_stddev = T,
-    structure_gross_stem_volume = T,
-    structure_loreys_height = T,
-    structure_percentage_first_returns_above_2m = T,
-    structure_percentage_first_returns_above_mean = T,
-    structure_total_biomass = T
+    structure_basal_area = F,
+    structure_elev_cv = F,
+    structure_elev_mean = F,
+    structure_elev_p95 = F,
+    structure_elev_stddev = F,
+    structure_gross_stem_volume = F,
+    structure_loreys_height = F,
+    structure_percentage_first_returns_above_2m = F,
+    structure_percentage_first_returns_above_mean = F,
+    structure_total_biomass = F
   ) %>%
   pivot_longer(cols = everything()) %>%
   filter(value) %>%
@@ -65,7 +67,7 @@ vars <-
 # a template raster to project to. currently, if the region is >1 UTM zone, defaults to LCC
 template <-
   rast("D:\\Bud\\template_raster\\CA_forest_VLCE_2015.tif")
-template <- rast("Z:\\ByUser\\Muise\\bc-vlce-2015.tif")
+# template <- rast("Z:\\ByUser\\Muise\\bc-vlce-2015.tif")
 
 #### end user inputs ####
 
